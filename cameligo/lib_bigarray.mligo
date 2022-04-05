@@ -14,17 +14,15 @@ let construct (type kind) (size : nat) (wanted_type : kind) : kind option big_ar
   construct size  wanted_type ([] : kind option big_array)
 
 (**
- * Last 
+ * Last the last element
  *)
 [@inline]
-let last (type kind) (lst1 : kind big_array) : kind =
+let last (type kind) (lst1 : kind big_array) : kind = 
   let rec last (type kind) (lst1 : kind big_array) : kind =
     match lst1 with 
-    | []         -> failwith "The big_array is empty"
-    | hd1 :: tl1 -> (
-      match tl1 with
-      | []         -> hd1
-      | hd2 :: tl2 -> last (tl1) ) 
+    | []        -> failwith "The big_array is empty"
+    | [ head ]  -> head
+    | _ :: tail -> last tail
   in
   last (lst1)
 
@@ -97,7 +95,7 @@ let insert (type kind) (element : kind) (position : nat) (lst1 : kind big_array)
   insert (element, position, lst1, ([] : kind big_array))
 
 (**
- * Drop
+ * Drop the element at a specific position
  *)
 [@inline]
 let drop (type kind) (position : nat) (lst1 : kind big_array) : kind big_array =
@@ -113,7 +111,7 @@ let drop (type kind) (position : nat) (lst1 : kind big_array) : kind big_array =
   drop (position, lst1, ([] : kind big_array))
 
 (**
- * take
+ * take retrieves first elements
  *)
 [@inline]
 let take (type kind) (i : nat) (lst : kind big_array) : kind big_array =
@@ -125,7 +123,7 @@ let take (type kind) (i : nat) (lst : kind big_array) : kind big_array =
   take (i, lst, ([] : kind big_array))
   
 (**
- * Slice
+ * Slice extracts a sub big array at a specifc position (and a specific length)
  *)
 [@inline]
 let slice (type kind) (i : nat) (k : nat) (lst : kind big_array) : kind big_array =
@@ -139,7 +137,7 @@ let slice (type kind) (i : nat) (k : nat) (lst : kind big_array) : kind big_arra
   slice (i, k, lst)
   
 (**
- * Split
+ * Split a given big array at a specific position
  *)
 [@inline]
 let split (type kind) (i : nat) (lst : kind big_array) : kind big_array * kind big_array =
@@ -164,15 +162,6 @@ let rotate (type kind) (i : nat) (lst : kind big_array) : kind big_array =
       | hd1 :: tl1 -> rotate (abs(i-1n), tl1, hd1 :: res) in
   rotate (i, lst, ([] : kind big_array))
 
-
-// (**
-// * equal (michelson version / not working for composed types)
-// *)
-// [@inline]
-// let equalm (type a) (val_a : a) (val_b : a) : bool =
-//   [%Michelson ({|{ UNPAIR; COMPARE; EQ }|} : a * a -> bool)] (val_a, val_b)
-
-
 (**
 * equal (bytes version)
 * WARNING : Two lambda can be packed equal whereas they are different
@@ -182,7 +171,7 @@ let equal (type a) (val_a: a) (val_b: a): bool =
     (Bytes.pack val_a) = (Bytes.pack val_b)
 
 (**
- * Remove
+ * Remove all occurences of a given element
  *)
 [@inline]
 let remove (type kind) (element : kind) (lst : kind big_array) : kind big_array =
