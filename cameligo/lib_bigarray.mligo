@@ -14,7 +14,7 @@ let construct (type kind) (size : nat) (wanted_type : kind) : kind option big_ar
   construct size  wanted_type ([] : kind option big_array)
 
 (**
- * Last the last element
+ * Last retrieves the last element
  *)
 [@inline]
 let last (type kind) (lst1 : kind big_array) : kind = 
