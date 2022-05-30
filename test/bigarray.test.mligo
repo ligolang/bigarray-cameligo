@@ -1,4 +1,4 @@
-#import "../cameligo/lib_bigarray.mligo" "Bigarray"
+#import "../lib/bigarray.mligo" "Bigarray"
 
 type 'a big_array = 'a list
 
@@ -237,4 +237,4 @@ let test_remove_with_int_should_work =
 
 
 
-// //  let () = Test.log ("result : ", result) in 
+// //  let () = Test.log ("result : ", result) in
