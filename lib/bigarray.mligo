@@ -133,7 +133,7 @@ let slice (type kind) (i : nat) (k : nat) (lst : kind big_array) : kind big_arra
       take extract lst
     else match lst with
       | []         -> []
-      | hd1 :: tl1 -> slice (abs(i-1n), k, tl1) in
+      | _hd1 :: tl1 -> slice (abs(i-1n), k, tl1) in
   slice (i, k, lst)
 
 (**
