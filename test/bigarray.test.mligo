@@ -12,7 +12,7 @@ let main (_action, store : bytes * bytes) : operation big_array * bytes = ([] : 
 let test_construct_basic_array_should_work =
   //Given
   let size : nat = 3n in
-  let intended_result : nat option list = [(None: nat option) ; (None: nat option) ; (None: nat option) ] in
+  let _intended_result : nat option list = [(None: nat option) ; (None: nat option) ; (None: nat option) ] in
   //when
   let result = Bigarray.construct size 0n in
   //Then
