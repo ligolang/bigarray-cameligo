@@ -1,240 +1,237 @@
 #import "../lib/bigarray.mligo" "Bigarray"
 
-type 'a big_array = 'a list
+let test_fill =
+  begin
+    assert (Bigarray.fill 4 10 = [10;10;10;10]);
+    assert (Bigarray.fill 4 "foo" = ["foo"; "foo"; "foo"; "foo"])
+  end
 
-// We need to create a generic entrypoint main that do nothing for compilation purpose
-let main (_action, store : bytes * bytes) : operation big_array * bytes = ([] : operation big_array), store
+let test_last_exn =
+  let xs = [1; 2; 3] in
+  let () = assert (Bigarray.last_exn xs = 3) in
+  let xs = ["foo"; "bar"; "baz"] in
+  assert (Bigarray.last_exn xs = "baz")
 
+let test_reverse =
+  let xs = [1; 2; 3] in
+  let () = assert (Bigarray.reverse xs = [3; 2; 1]) in
+  let xs = ["foo"; "bar"; "baz"] in
+  assert (Bigarray.reverse xs = ["baz"; "bar"; "foo"])
 
-(**
- *  Basic Constructor
- *)
-let test_construct_basic_array_should_work =
-  //Given
-  let size : nat = 3n in
-  let _intended_result : nat option list = [(None: nat option) ; (None: nat option) ; (None: nat option) ] in
-  //when
-  let result = Bigarray.construct size 0n in
-  //Then
-  let () = Test.log ("result : ", result) in "OK"
+let test_concat =
+  let xs = [1; 2; 3] in
+  let ys = [4; 5; 6] in
+  let zs = Bigarray.concat xs ys in
+  let () = assert (zs = [1; 2; 3; 4; 5; 6]) in
+  let xs = ["foo"; "bar"; "baz"] in
+  let ys = ["qux"; "quux"; "corge"] in
+  let zs = Bigarray.concat xs ys in
+  assert
+    (zs = ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"])
 
-(**
- *  Get the last element
- *)
-let test_last_element_with_string_should_work =
-  //Given
-  let lst1 : string big_array = ["one"; "two"; "three"; "four"] in
-  let intended_result : string = "four" in
-  //when
-  let result = Bigarray.last lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
+let test_get_exn =
+  let xs = [1; 2; 3; 4; 5; 6; 7] in
+  let ys =
+    ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"; "grault"] in
+  begin
+    assert (Bigarray.get_exn xs 0 = 1);
+    assert (Bigarray.get_exn xs 2 = 3);
+    assert (Bigarray.get_exn xs 5 = 6);
+    assert (Bigarray.get_exn ys 0 = "foo");
+    assert (Bigarray.get_exn ys 2 = "baz");
+    assert (Bigarray.get_exn ys 5 = "corge")
+  end
 
-(**
- *  Reverse
- *)
-let test_reversing_with_int_should_work =
-  //Given
-  let lst1 : int big_array = [1; 2; 3] in
-  let intended_result : int big_array = [3; 2; 1] in
-  //when
-  let result = Bigarray.reverse lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
+let test_set_exn =
+  let xs = [1; 2; 3; 4; 5; 6; 7] in
+  let ys =
+    ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"; "grault"] in
+  begin
+    assert (Bigarray.set_exn xs 0 0 = [0; 2; 3; 4; 5; 6; 7]);
+    assert (Bigarray.set_exn xs 2 33 = [1; 2; 33; 4; 5; 6; 7]);
+    assert (Bigarray.set_exn xs 6 77 = [1; 2; 3; 4; 5; 6; 77]);
+    assert
+      (Bigarray.set_exn ys 0 "garply"
+       = ["garply";
+          "bar";
+          "baz";
+          "qux";
+          "quux";
+          "corge";
+          "grault"]);
+    assert
+      (Bigarray.set_exn ys 2 "waldo"
+       = ["foo";
+          "bar";
+          "waldo";
+          "qux";
+          "quux";
+          "corge";
+          "grault"]);
+    assert
+      (Bigarray.set_exn ys 6 "fred"
+       = ["foo";
+          "bar";
+          "baz";
+          "qux";
+          "quux";
+          "corge";
+          "fred"])
+  end
 
-let test_reversing_with_string_should_work =
-  //Given
-  let lst1 : string big_array = ["one"; "two"; "three"] in
-  let intended_result : string big_array = ["three"; "two"; "one"] in
-  //when
-  let result = Bigarray.reverse lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
+let test_insert_exn =
+  let xs = [1; 2; 3; 4; 5; 6; 7] in
+  let ys =
+    ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"; "grault"] in
+  begin
+    assert
+      (Bigarray.insert_exn xs 0 0 = [0; 1; 2; 3; 4; 5; 6; 7]);
+    assert
+      (Bigarray.insert_exn xs 2 3 = [1; 2; 3; 3; 4; 5; 6; 7]);
+    assert
+      (Bigarray.insert_exn xs 6 8 = [1; 2; 3; 4; 5; 6; 8; 7]);
+    assert
+      (Bigarray.insert_exn ys 0 "garply"
+       = ["garply";
+          "foo";
+          "bar";
+          "baz";
+          "qux";
+          "quux";
+          "corge";
+          "grault"]);
+    assert
+      (Bigarray.insert_exn ys 2 "waldo"
+       = ["foo";
+          "bar";
+          "waldo";
+          "baz";
+          "qux";
+          "quux";
+          "corge";
+          "grault"]);
+    assert
+      (Bigarray.insert_exn ys 6 "fred"
+       = ["foo";
+          "bar";
+          "baz";
+          "qux";
+          "quux";
+          "corge";
+          "fred";
+          "grault"])
+  end
 
-(**
- *  Concatenation
- *)
-let test_concatenation_with_int_should_work =
-  //Given
-  let lst1 : int big_array = [1; 2; 3] in
-  let lst2 : int big_array = [4; 5] in
-  let intended_result : int big_array = [1 ; 2 ; 3 ; 4 ; 5] in
-  //when
-  let result = Bigarray.concat lst1 lst2 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
+let test_remove_exn =
+  let xs = [1; 2; 3; 4; 5; 6; 7] in
+  let ys =
+    ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"; "grault"] in
+  begin
+    assert (Bigarray.remove_exn xs 0 = [2; 3; 4; 5; 6; 7]);
+    assert (Bigarray.remove_exn xs 2 = [1; 2; 4; 5; 6; 7]);
+    assert (Bigarray.remove_exn xs 6 = [1; 2; 3; 4; 5; 6]);
+    assert
+      (Bigarray.remove_exn ys 0
+       = ["bar"; "baz"; "qux"; "quux"; "corge"; "grault"]);
+    assert
+      (Bigarray.remove_exn ys 2
+       = ["foo"; "bar"; "qux"; "quux"; "corge"; "grault"]);
+    assert
+      (Bigarray.remove_exn ys 6
+       = ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"])
+  end
 
-let test_concatenation_with_string_should_work =
-  //Given
-  let lst1 : string big_array = ["one"; "two"; "three"] in
-  let lst2 : string big_array = ["four"; "five"] in
-  let intended_result : string big_array = ["one"; "two"; "three"; "four"; "five"] in
-  //when
-  let result = Bigarray.concat lst1 lst2 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
+let test_drop_exn =
+  let xs = [1; 2; 3; 4; 5; 6; 7] in
+  let ys =
+    ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"; "grault"] in
+  begin
+    assert (Bigarray.drop_exn xs 0 = [1; 2; 3; 4; 5; 6; 7]);
+    assert (Bigarray.drop_exn xs 2 = [3; 4; 5; 6; 7]);
+    assert (Bigarray.drop_exn xs 6 = [7]);
+    assert
+      (Bigarray.drop_exn ys 0
+       = ["foo";
+          "bar";
+          "baz";
+          "qux";
+          "quux";
+          "corge";
+          "grault"]);
+    assert
+      (Bigarray.drop_exn ys 2
+       = ["baz"; "qux"; "quux"; "corge"; "grault"]);
+    assert (Bigarray.drop_exn ys 6 = ["grault"])
+  end
 
-(**
- *  Get one element
- *)
-let test_get_element_with_int_should_work =
-  //Given
-  let lst1 : int big_array = [1; 2; 3; 4] in
-  let position : nat = 1n in
-  let intended_result : int = 2 in
-  //when
-  let result = Bigarray.find position lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
+let test_take =
+  let xs = [1; 2; 3; 4; 5; 6; 7] in
+  let ys =
+    ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"; "grault"] in
+  begin
+    assert (Bigarray.take xs 0 = ([] : int list));
+    assert (Bigarray.take xs 2 = [1; 2]);
+    assert (Bigarray.take xs 6 = [1; 2; 3; 4; 5; 6]);
+    assert (Bigarray.take ys 0 = ([] : string list));
+    assert (Bigarray.take ys 2 = ["foo"; "bar"]);
+    assert
+      (Bigarray.take ys 6
+       = ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"])
+  end
 
-let test_get_element_with_string_should_work =
-  //Given
-  let lst1 : string big_array = ["one"; "two"; "three"; "four"] in
-  let position : nat = 1n in
-  let intended_result : string = "two" in
-  //when
-  let result = Bigarray.find position lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
+let test_slice =
+  let xs = [1; 2; 3; 4; 5; 6; 7] in
+  let ys =
+    ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"; "grault"] in
+  begin
+    assert (Bigarray.slice xs 0 0 = ([] : int list));
+    assert (Bigarray.slice xs 0 2 = [1; 2]);
+    assert (Bigarray.slice xs 3 2 = [4; 5]);
+    assert (Bigarray.slice xs 6 1 = [7]);
+    assert (Bigarray.slice ys 0 0 = ([] : string list));
+    assert (Bigarray.slice ys 0 2 = ["foo"; "bar"]);
+    assert (Bigarray.slice ys 3 2 = ["qux"; "quux"]);
+    assert (Bigarray.slice ys 6 1 = ["grault"])
+  end
 
-(**
- *  Set one element
- *)
-let test_set_element_with_int_should_work =
-  //Given
-  let lst1 : int big_array = [1; 2; 3; 4; 5] in
-  let element : int = 7 in
-  let position : nat = 2n in
-  let intended_result : int big_array = [1; 2; 7; 4; 5] in
-  //when
-  let result = Bigarray.set element position lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
+let test_split =
+  let xs = [1; 2; 3; 4; 5; 6; 7] in
+  let ys =
+    ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"; "grault"] in
+  begin
+    assert
+      (Bigarray.split xs 0
+       = (([] : int list), [1; 2; 3; 4; 5; 6; 7]));
+    assert (Bigarray.split xs 3 = ([1; 2; 3], [4; 5; 6; 7]));
+    assert (Bigarray.split xs 5 = ([1; 2; 3; 4; 5], [6; 7]));
+    assert
+      (Bigarray.split ys 0
+       = (([] : string list),
+          ["foo";
+           "bar";
+           "baz";
+           "qux";
+           "quux";
+           "corge";
+           "grault"]));
+    assert
+      (Bigarray.split ys 3
+       = (["foo"; "bar"; "baz"],
+          ["qux"; "quux"; "corge"; "grault"]));
+    assert
+      (Bigarray.split ys 5
+       = (["foo"; "bar"; "baz"; "qux"; "quux"],
+          ["corge"; "grault"]))
+  end
 
-let test_set_element_with_string_should_work =
-  //Given
-  let lst1 : string big_array = ["one"; "two"; "three"; "four"; "five"] in
-  let element : string = "seven" in
-  let position : nat = 1n in
-  let intended_result : string big_array = ["one"; "seven"; "three"; "four"; "five"] in
-  //when
-  let result = Bigarray.set element position lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
-
-(**
- *  Insert one element
- *)
-let test_insertion_with_int_should_work =
-  //Given
-  let lst1 : int big_array = [1; 3; 4] in
-  let element : int = 2 in
-  let position : nat = 1n in
-  let intended_result : int big_array = [1 ; 2 ; 3 ; 4] in
-  //when
-  let result = Bigarray.insert element position lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
-
-let test_insertion_with_string_should_work =
-  //Given
-  let lst1 : string big_array = ["one"; "three"; "four"] in
-  let element : string = "two" in
-  let position : nat = 1n in
-  let intended_result : string big_array = ["one"; "two"; "three"; "four"] in
-  //when
-  let result = Bigarray.insert element position lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
-
-(**
- *  Drop one element
- *)
-let test_drop_with_int_should_work =
-  //Given
-  let lst1 : int big_array = [1; 2; 3; 4] in
-  let position : nat = 2n in
-  let intended_result : int big_array = [1 ; 2 ; 4] in
-  //when
-  let result = Bigarray.drop position lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
-
-let test_drop_with_string_should_work =
-  //Given
-  let lst1 : string big_array = ["one"; "two"; "three"; "four"] in
-  let position : nat = 3n in
-  let intended_result : string big_array = ["one"; "two"; "three"] in
-  //when
-  let result = Bigarray.drop position lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
-
-(**
- *  Slice
- *)
-let test_slice_with_int_should_work =
-  //Given
-  let lst1 : int big_array = [1; 2; 3; 4] in
-  let i : nat = 1n in
-  let j : nat = 2n in
-  let intended_result : int big_array = [2 ; 3] in
-  //when
-  let result = Bigarray.slice i j lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
-
-let test_slice_with_string_should_work =
-  //Given
-  let lst1 : string big_array = ["one"; "two"; "three"; "four"] in
-  let i : nat = 0n in
-  let j : nat = 6n in
-  let intended_result : string big_array = ["one"; "two"; "three"; "four"] in
-  //when
-  let result = Bigarray.slice i j lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
-
-(**
- *  Split
- *)
-let test_split_with_int_should_work =
-  //Given
-  let lst : int big_array = [1; 2; 3; 4] in
-  let i : nat = 1n in
-  let intended_result1 : int big_array = [1] in
-  let intended_result2 : int big_array = [2; 3; 4] in
-  //when
-  let result = Bigarray.split i lst in
-  //Then
-  let () = assert (result = (intended_result1, intended_result2)) in "OK"
-
-(**
- *  Rotate
- *)
-let test_rotate_with_int_should_work =
-  //Given
-  let lst1 : int big_array = [1; 2; 3; 4] in
-  let i : nat = 1n in
-  let intended_result : int big_array = [2; 3; 4; 1] in
-  //when
-  let result = Bigarray.rotate i lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
-
-(**
- *  Remove
- *)
-let test_remove_with_int_should_work =
-  //Given
-  let lst1 : int big_array = [1; 2; 3; 2] in
-  let elem : int = 2 in
-  let intended_result : int big_array = [1; 3] in
-  //when
-  let result = Bigarray.remove elem lst1 in
-  //Then
-  let () = assert (result = intended_result) in "OK"
-
-
-
-// //  let () = Test.log ("result : ", result) in
+let test_rotate =
+  let xs = [1; 2; 3; 4; 5; 6; 7] in
+  let ys =
+    ["foo"; "bar"; "baz"; "qux"; "quux"; "corge"; "grault"] in
+  begin
+    assert (Bigarray.rotate xs 0 = xs);
+    assert (Bigarray.rotate xs 1 = [2 ; 3 ; 4 ; 5 ; 6 ; 7 ; 1]);
+    assert (Bigarray.rotate xs 4 = [5 ; 6 ; 7 ; 1; 2; 3; 4]);
+    assert (Bigarray.rotate ys 1 = ["bar"; "baz"; "qux"; "quux"; "corge"; "grault"; "foo"]);
+    assert (Bigarray.rotate ys 4 = ["quux"; "corge"; "grault"; "foo"; "bar"; "baz"; "qux"])
+  end
