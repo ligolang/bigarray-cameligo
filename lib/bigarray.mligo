@@ -1,8 +1,8 @@
 let fill (type a) (n : int) (x : a) : a list =
-  let rec aux (n, x, acc : int * a * a list) : a list =
+  let rec aux (n, acc : int * a list) : a list =
     if (n = 0) then acc
-    else aux (n - 1, x, x :: acc) in
-  aux (n, x, ([] : a list))
+    else aux (n - 1, x :: acc) in
+  aux (n, ([] : a list))
 
 let rec last_exn (type a) (xs : a list) : a =
   match xs with
@@ -26,7 +26,7 @@ let get_exn (type a) (xs : a list) (n : int) : a =
   aux xs 0
 
 let set_exn (type a) (xs : a list) (n : int) (x : a) : a list =
-  let rec aux (xs, n, x, acc : a list * int * a * a list)
+  let rec aux (xs, n, acc : a list * int * a list)
   : a list =
     match xs with
       [] -> failwith "Not found in list"
@@ -35,11 +35,11 @@ let set_exn (type a) (xs : a list) (n : int) (x : a) : a list =
         then
           let ys = reverse (x :: acc) in
           concat ys tl
-        else aux (tl, n - 1, x, hd :: acc) in
-  aux (xs, n, x, ([] : a list))
+        else aux (tl, n - 1, hd :: acc) in
+  aux (xs, n, ([] : a list))
 
 let insert_exn (type a) (xs : a list) (n : int) (x : a) : a list =
-  let rec aux (xs, n, x, acc : a list * int * a * a list)
+  let rec aux (xs, n, acc : a list * int * a list)
   : a list =
     match xs with
       [] -> failwith "Not found in list"
@@ -48,8 +48,8 @@ let insert_exn (type a) (xs : a list) (n : int) (x : a) : a list =
         then
           let ys = reverse (x :: acc) in
           concat ys xs
-        else aux (tl, n - 1, x, hd :: acc) in
-  aux (xs, n, x, ([] : a list))
+        else aux (tl, n - 1, hd :: acc) in
+  aux (xs, n, ([] : a list))
 
 let remove_exn (type a) (xs : a list) (n : int) : a list =
   let rec aux (xs, n, acc : a list * int * a list) : a list =
