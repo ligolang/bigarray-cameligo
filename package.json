@@ -1,6 +1,6 @@
 {
   "name": "@ligo/bigarray-cameligo",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A LIGO library with a neat abstraction over list",
   "directories": {
     "lib": "lib",
