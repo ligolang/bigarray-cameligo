@@ -66,7 +66,7 @@ let remove_exn (type a) (xs : a list) (n : int) : a list =
 let rec drop_exn (type a) (xs : a list) (n : int) : a list =
   match xs with
     [] -> failwith "Not found in list"
-  | hd :: tl -> if (n = 0) then xs else drop_exn tl (n - 1)
+  | _hd :: tl -> if (n = 0) then xs else drop_exn tl (n - 1)
 
 let take (type a) (xs : a list) (n : int) : a list =
   let rec aux (xs, n, acc : a list * int * a list) : a list =
