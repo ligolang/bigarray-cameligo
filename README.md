@@ -1,6 +1,6 @@
 # Bigarray
 
-`Bigarray` is an ordered data structure.  
+`Bigarray` is an ordered data structure.
 
 `Bigarray` are one dimensional arrays, they're represented as a list internally.
 
@@ -14,3 +14,8 @@ see [bigarray.test.mligo](./test/bigarray.test.mligo) for usage.
 ## Dev
 
 Just run `make` or `make test` to run the tests
+
+You can also override `make` parameters by running :
+```sh
+make test ligo_compiler=<LIGO_EXECUTABLE> PROTOCOL_OPT="--protocol <PROTOCOL>"
+```
