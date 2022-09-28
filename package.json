@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "A LIGO library with a neat abstraction over list",
   "main": "lib/bigarray.mligo",
+  "author": "LIGO developers",
   "directories": {
     "lib": "lib",
     "test": "test"
