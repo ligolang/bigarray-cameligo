@@ -4,6 +4,7 @@
   "description": "A LIGO library with a neat abstraction over list",
   "main": "lib/bigarray.mligo",
   "author": "LIGO developers",
+  "repository": "https://github.com/ligolang/bigarray-cameligo",
   "directories": {
     "lib": "lib",
     "test": "test"
