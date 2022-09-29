@@ -1,0 +1,33 @@
+{
+  "checksum": "7e74badf5ddbd602c27602fe95166d84",
+  "root": "examples@link-dev:./package.json",
+  "node": {
+    "examples@link-dev:./package.json": {
+      "id": "examples@link-dev:./package.json",
+      "name": "examples",
+      "version": "link-dev:./package.json",
+      "source": {
+        "type": "link-dev",
+        "path": ".",
+        "manifest": "package.json"
+      },
+      "overrides": [],
+      "dependencies": [ "bigarray-cameligo@0.1.0-dev.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "bigarray-cameligo@0.1.0-dev.1@d41d8cd9": {
+      "id": "bigarray-cameligo@0.1.0-dev.1@d41d8cd9",
+      "name": "bigarray-cameligo",
+      "version": "0.1.0-dev.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://beta.packages.ligolang.org/-/api/bigarray-cameligo/-/bigarray-cameligo-0.1.0-dev.1.tgz#sha1:430951c925b56d4a08532e5b3426eea3055c11e0"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    }
+  }
+}
