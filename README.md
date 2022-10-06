@@ -16,7 +16,7 @@ While we recommend you consult the [documentation](https://ligolang.org/docs/adv
 Create an empty `package.json` (just `{}`), and run,
 
 ```sh
-ligo install bigarray-cameligo
+ligo install @ligo/bigarray
 ```
 
 to install the package.
