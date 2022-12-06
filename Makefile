@@ -1,7 +1,5 @@
-ifndef LIGO
-LIGO=docker run --rm -v "$(PWD)":"$(PWD)" -w "$(PWD)" ligolang/ligo:stable
-endif
+ligo_compiler?=docker run --rm -v "$(PWD)":"$(PWD)" -w "$(PWD)" ligolang/ligo:stable
 
 .PHONY: test
 test:
-	@$(LIGO) run test ./test/bigarray.test.mligo
+	@$(ligo_compiler) run test ./test/bigarray.test.mligo
